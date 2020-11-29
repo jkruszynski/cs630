@@ -1,0 +1,394 @@
+-- Table: public.customers
+
+-- DROP TABLE public.customers;
+
+CREATE TABLE public.customers
+(
+    id integer NOT NULL DEFAULT nextval('customers_id_seq'::regclass),
+    name character varying COLLATE pg_catalog."default" NOT NULL,
+    address character varying COLLATE pg_catalog."default",
+    phone character varying COLLATE pg_catalog."default",
+    email character varying COLLATE pg_catalog."default",
+    CONSTRAINT customers_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.customers
+    OWNER to postgres;
+
+
+-- Table: public.feedback
+
+-- DROP TABLE public.feedback;
+
+CREATE TABLE public.feedback
+(
+    id integer NOT NULL DEFAULT nextval('feedback_id_seq'::regclass),
+    customer_id integer,
+    text character varying COLLATE pg_catalog."default",
+    store_id integer,
+    CONSTRAINT feedback_pkey PRIMARY KEY (id),
+    CONSTRAINT customerfeedbackfk FOREIGN KEY (customer_id)
+        REFERENCES public.customers (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.feedback
+    OWNER to postgres;
+-- Index: fki_customerfeedbackfk
+
+-- DROP INDEX public.fki_customerfeedbackfk;
+
+CREATE INDEX fki_customerfeedbackfk
+    ON public.feedback USING btree
+    (customer_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
+-- Table: public.inventory
+
+-- DROP TABLE public.inventory;
+
+CREATE TABLE public.inventory
+(
+    id integer NOT NULL DEFAULT nextval('inventory_id_seq'::regclass),
+    location_id integer NOT NULL,
+    item_id integer NOT NULL,
+    count integer NOT NULL,
+    CONSTRAINT inventory_pkey PRIMARY KEY (id),
+    CONSTRAINT "invItemFk" FOREIGN KEY (item_id)
+        REFERENCES public.items (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "locationFK" FOREIGN KEY (location_id)
+        REFERENCES public.ref_store_locations (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "locationInvFK" FOREIGN KEY (location_id)
+        REFERENCES public.ref_store_locations (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.inventory
+    OWNER to postgres;
+-- Index: fki_invItemFk
+
+-- DROP INDEX public."fki_invItemFk";
+
+CREATE INDEX "fki_invItemFk"
+    ON public.inventory USING btree
+    (item_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_locationInvFK
+
+-- DROP INDEX public."fki_locationInvFK";
+
+CREATE INDEX "fki_locationInvFK"
+    ON public.inventory USING btree
+    (location_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
+-- Table: public.itemized_sale
+
+-- DROP TABLE public.itemized_sale;
+
+CREATE TABLE public.itemized_sale
+(
+    id integer NOT NULL DEFAULT nextval('itemized_sale_id_seq'::regclass),
+    item_id integer NOT NULL,
+    sale_id integer,
+    CONSTRAINT itemized_sale_pkey PRIMARY KEY (id),
+    CONSTRAINT "itemizedSaleItemIdFK" FOREIGN KEY (item_id)
+        REFERENCES public.items (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "itemizedSaleSaleIdFK" FOREIGN KEY (sale_id)
+        REFERENCES public.sales (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.itemized_sale
+    OWNER to postgres;
+-- Index: fki_itemizedSaleItemIdFK
+
+-- DROP INDEX public."fki_itemizedSaleItemIdFK";
+
+CREATE INDEX "fki_itemizedSaleItemIdFK"
+    ON public.itemized_sale USING btree
+    (item_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_itemizedSaleSaleIdFK
+
+-- DROP INDEX public."fki_itemizedSaleSaleIdFK";
+
+CREATE INDEX "fki_itemizedSaleSaleIdFK"
+    ON public.itemized_sale USING btree
+    (sale_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
+-- Table: public.items
+
+-- DROP TABLE public.items;
+
+CREATE TABLE public.items
+(
+    id integer NOT NULL DEFAULT nextval('items_id_seq'::regclass),
+    name character varying COLLATE pg_catalog."default" NOT NULL,
+    weight numeric,
+    type integer NOT NULL,
+    price numeric,
+    description character varying COLLATE pg_catalog."default",
+    CONSTRAINT items_pkey PRIMARY KEY (id),
+    CONSTRAINT "itemItemTypeFK" FOREIGN KEY (type)
+        REFERENCES public.ref_item_types (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.items
+    OWNER to postgres;
+-- Index: fki_itemItemTypeFK
+
+-- DROP INDEX public."fki_itemItemTypeFK";
+
+CREATE INDEX "fki_itemItemTypeFK"
+    ON public.items USING btree
+    (type ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
+-- Table: public.ref_item_types
+
+-- DROP TABLE public.ref_item_types;
+
+CREATE TABLE public.ref_item_types
+(
+    id integer NOT NULL DEFAULT nextval('ref_item_types_id_seq'::regclass),
+    name character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT ref_item_types_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.ref_item_types
+    OWNER to postgres;
+
+
+-- Table: public.ref_store_locations
+
+-- DROP TABLE public.ref_store_locations;
+
+CREATE TABLE public.ref_store_locations
+(
+    id integer NOT NULL DEFAULT nextval('ref_store_locations_id_seq'::regclass),
+    name character varying COLLATE pg_catalog."default" NOT NULL,
+    address character varying COLLATE pg_catalog."default",
+    CONSTRAINT ref_store_locations_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.ref_store_locations
+    OWNER to postgres;
+
+
+-- Table: public.sales
+
+-- DROP TABLE public.sales;
+
+CREATE TABLE public.sales
+(
+    id integer NOT NULL DEFAULT nextval('sales_id_seq'::regclass),
+    customer_id integer NOT NULL,
+    total_sale numeric NOT NULL,
+    location_id integer NOT NULL,
+    CONSTRAINT sales_pkey PRIMARY KEY (id),
+    CONSTRAINT "customerFK" FOREIGN KEY (customer_id)
+        REFERENCES public.customers (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "locationFK" FOREIGN KEY (location_id)
+        REFERENCES public.ref_store_locations (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.sales
+    OWNER to postgres;
+-- Index: fki_customerFK
+
+-- DROP INDEX public."fki_customerFK";
+
+CREATE INDEX "fki_customerFK"
+    ON public.sales USING btree
+    (customer_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_locationFK
+
+-- DROP INDEX public."fki_locationFK";
+
+CREATE INDEX "fki_locationFK"
+    ON public.sales USING btree
+    (location_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
+-- SEQUENCE: public.customers_id_seq
+
+-- DROP SEQUENCE public.customers_id_seq;
+
+CREATE SEQUENCE public.customers_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.customers_id_seq
+    OWNER TO postgres;
+
+
+-- SEQUENCE: public.feedback_id_seq
+
+-- DROP SEQUENCE public.feedback_id_seq;
+
+CREATE SEQUENCE public.feedback_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.feedback_id_seq
+    OWNER TO postgres;
+
+
+-- SEQUENCE: public.inventory_id_seq
+
+-- DROP SEQUENCE public.inventory_id_seq;
+
+CREATE SEQUENCE public.inventory_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.inventory_id_seq
+    OWNER TO postgres;
+
+
+-- SEQUENCE: public.itemized_sale_id_seq
+
+-- DROP SEQUENCE public.itemized_sale_id_seq;
+
+CREATE SEQUENCE public.itemized_sale_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.itemized_sale_id_seq
+    OWNER TO postgres;
+
+
+-- SEQUENCE: public.items_id_seq
+
+-- DROP SEQUENCE public.items_id_seq;
+
+CREATE SEQUENCE public.items_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.items_id_seq
+    OWNER TO postgres;
+
+
+-- SEQUENCE: public.ref_item_types_id_seq
+
+-- DROP SEQUENCE public.ref_item_types_id_seq;
+
+CREATE SEQUENCE public.ref_item_types_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.ref_item_types_id_seq
+    OWNER TO postgres;
+
+
+-- SEQUENCE: public.ref_store_locations_id_seq
+
+-- DROP SEQUENCE public.ref_store_locations_id_seq;
+
+CREATE SEQUENCE public.ref_store_locations_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.ref_store_locations_id_seq
+    OWNER TO postgres;
+
+
+-- SEQUENCE: public.sales_id_seq
+
+-- DROP SEQUENCE public.sales_id_seq;
+
+CREATE SEQUENCE public.sales_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.sales_id_seq
+    OWNER TO postgres;
