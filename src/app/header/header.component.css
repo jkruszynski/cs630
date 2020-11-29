@@ -1,0 +1,9 @@
+.cell {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  /*flex: 1 1 auto;*/
+  padding-right: 20px;
+  padding-left: 20px;
+  cursor: pointer;
+
+}
