@@ -1,0 +1,38 @@
+<div>
+  <th>
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input id="newItem.name" [(ngModel)]="newItem.name" matInput>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Weight</mat-label>
+      <input type="number" id="newItem.weight" [(ngModel)]="newItem.weight" matInput>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Select Item Type</mat-label>
+      <mat-select [(ngModel)]="newItem.type">
+        <mat-option value="1">Armor</mat-option>
+        <mat-option value="2">Weapon</mat-option>
+        <mat-option value="3">Other</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Price</mat-label>
+      <input type="number" id="newItem.price" [(ngModel)]="newItem.price" matInput>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <input id="newItem.description" [(ngModel)]="newItem.description" matInput>
+    </mat-form-field>
+    <br>
+  </th>
+</div>
+<mat-divider></mat-divider>
+<mat-divider></mat-divider>
+<div class="savebutton">
+  <button mat-raised-button color="primary"  (click)="addItem()">Save</button>
+</div>

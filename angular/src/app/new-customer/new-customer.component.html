@@ -1,0 +1,29 @@
+<div>
+  <th>
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input id="newCustomer.name" [(ngModel)]="newCustomer.name" matInput>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Address</mat-label>
+      <input id="newCustomer.address" [(ngModel)]="newCustomer.address" matInput>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Phone Number</mat-label>
+      <input id="newCustomer.phone" [(ngModel)]="newCustomer.phone" matInput>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input id="newCustomer.email" [(ngModel)]="newCustomer.email" matInput>
+    </mat-form-field>
+    <br>
+  </th>
+</div>
+<mat-divider></mat-divider>
+<mat-divider></mat-divider>
+<div class="savebutton">
+  <button mat-raised-button color="primary" (click)="addCustomer()">Save</button>
+</div>

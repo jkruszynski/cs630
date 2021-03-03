@@ -1,0 +1,21 @@
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> Sale ID </th>
+    <td mat-cell *matCellDef="let sale"> {{sale.id}} </td>
+  </ng-container>
+  <ng-container matColumnDef="total_sale">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Sale </th>
+    <td mat-cell *matCellDef="let sale"> {{sale.total_sale}} </td>
+  </ng-container>
+  <ng-container matColumnDef="location">
+    <th mat-header-cell *matHeaderCellDef> Location </th>
+    <td mat-cell *matCellDef="let sale"> {{sale.location}} </td>
+  </ng-container>
+  <ng-container matColumnDef="sale_date">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sale Date </th>
+    <td mat-cell *matCellDef="let sale"> {{sale.sale_date}} </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <!--  <tr mat-row *matRowDef="let row; columns: columnsToDisplay" (click)="openEditEmployee(row.id, $event)"-->
+  <tr mat-row *matRowDef="let row; columns: columnsToDisplay" ></tr>
+</table>
